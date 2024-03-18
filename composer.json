@@ -1,5 +1,5 @@
 {
-    "name": "spawoz/spt-socialmedia",
+    "name": "spt/spt-socialmedia",
     "type": "typo3-cms-extension",
     "description": "Extension to manage social media widgets.",
     "authors": [
