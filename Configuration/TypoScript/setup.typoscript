@@ -73,7 +73,7 @@ page.99999 {
 #include  and css
 page.includeCSS {
     socialMediaCss = EXT:spt_socialmedia/Resources/Public/Css/socialwidget.css
-    fontAwesome6Css = EXT:spt_socialmedia/Resources/Public/Css/fontawesome/css/all.min.css
+    fontAwesome6Css = EXT:spt_socialmedia/Resources/Public/Css/all.min.css
 }
 
 #include Js
