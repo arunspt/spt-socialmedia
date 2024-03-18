@@ -1,6 +1,11 @@
 <?php
 namespace SPT\SptSocialmedia\Domain\Repository;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+
 /***
  *
  * This file is part of the "Social Media Widget" Extension for TYPO3 CMS.
@@ -19,16 +24,14 @@ class SocialmediaRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 {
     // Order by BE sorting
     protected $defaultOrderings = array(        
-        'sorting' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING
+        'sorting' => QueryInterface::ORDER_ASCENDING
     );
 
-    /**
-     * Disable respecting of a storage pid within queries globally.
-     */
     public function initializeObject()
     {
-        $defaultQuerySettings = $this->objectManager->get(\TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings::class);
-        $defaultQuerySettings->setRespectStoragePage(false);
-        $this->setDefaultQuerySettings($defaultQuerySettings);
+        /** @var QuerySettingsInterface $querySettings */
+        $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
+        $querySettings->setRespectStoragePage(false);
+        $this->setDefaultQuerySettings($querySettings);
     }
 }

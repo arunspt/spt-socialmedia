@@ -8,19 +8,19 @@
     var defaults = {
       effect: '', // slide-on-scroll
       buttons: {
-        'facebook': { class: 'facebook', use: false, icon: 'facebook', link: '', title: 'Follow on Facebook' },
-        'google-plus': { class: 'google-plus', use: false, icon: 'google-plus', link: '', title: 'Visit on Google Plus' },
-        'linkedin': { class: 'linkedin', use: false, icon: 'linkedin', link: '', title: 'Visit on LinkedIn' },
-        'twitter': { class: 'twitter', use: false, icon: 'twitter', link: '', title: 'Follow on Twitter' },
-        'pinterest-p': { class: 'pinterest-p', use: false, icon: 'pinterest-p', link: '', title: 'Follow on Pinterest' },
-        'phone': { class: 'phone', use: false, icon: 'phone', link: '', title: 'Call us', type: 'phone' },
-        'envelope-o': { class: 'envelope-o', use: false, icon: 'envelope-o', link: '', title: 'Send us an email', type: 'email' },
-        'xing': { class: 'xing', use: false, icon: 'xing', link: '', title: 'Follow on Xing' },
-        'youtube': { class: 'youtube', use: false, icon: 'youtube', link: '', title: 'Follow on Youtube' },
-        'instagram': { class: 'instagram', use: false, icon: 'instagram', link: '', title: 'Follow on Instagram' },
-        'file-o': { class: 'file-o', use: false, icon: 'file-o', link: '', title: 'Follow on file-o' },
-        'link': { class: 'link', use: false, icon: 'link', link: '', title: 'Follow on link' },
-        'external-link': { class: 'external-link', use: false, icon: 'external-link', link: '', title: 'Follow on external-link' },
+        'facebook': { class: 'facebook', use: false, icon: 'fa-brands fa-facebook-f', link: '', title: 'Follow on Facebook' },
+        'google-plus': { class: 'google-plus', use: false, icon: 'fa-brands fa-google-plus-g', link: '', title: 'Visit on Google Plus' },
+        'linkedin': { class: 'linkedin', use: false, icon: 'fa-brands fa-linkedin-in', link: '', title: 'Visit on LinkedIn' },
+        'twitter': { class: 'twitter', use: false, icon: 'fa-brands fa-x-twitter', link: '', title: 'Follow on Twitter' },
+        'pinterest-p': { class: 'pinterest-p', use: false, icon: 'fa-brands fa-pinterest-p', link: '', title: 'Follow on Pinterest' },
+        'phone': { class: 'phone', use: false, icon: 'fa-solid fa-phone', link: '', title: 'Call us', type: 'phone' },
+        'envelope-o': { class: 'envelope-o', use: false, icon: 'fa-solid fa-envelope', link: '', title: 'Send us an email', type: 'email' },
+        'xing': { class: 'xing', use: false, icon: 'fa-brands fa-xing', link: '', title: 'Follow on Xing' },
+        'youtube': { class: 'youtube', use: false, icon: 'fa-brands fa-youtube', link: '', title: 'Follow on Youtube' },
+        'instagram': { class: 'instagram', use: false, icon: 'fa-brands fa-instagram', link: '', title: 'Follow on Instagram' },
+        'file-o': { class: 'file-o', use: false, icon: 'fa-solid fa-file', link: '', title: 'Follow on file-o' },
+        'link': { class: 'link', use: false, icon: 'fa-solid fa-link', link: '', title: 'Follow on link' },
+        'external-link': { class: 'external-link', use: false, icon: 'fa-solid fa-arrow-up-right-from-square', link: '', title: 'Follow on external-link' },
       }
     };
 
@@ -62,14 +62,14 @@
         if (active) {
 
           // Change the link for phone and email when needed
-          if (bs.type === 'phone') {
-            sLink = 'tel:' + bs.link;
-          } else if (bs.type === 'email') {
-            sLink = 'mailto:' + bs.link;
-          }
+          // if (bs.type === 'phone') {
+          //   sLink = 'tel:' + bs.link;
+          // } else if (bs.type === 'email') {
+          //   sLink = 'mailto:' + bs.link;
+          // }
 
           // Insert the links
-          var sIcon = '<i class="fa fa-' + bs.icon + '"></i>',
+          var sIcon = '<i class="' + bs.icon + '"></i>',
             sButton = '<a href="' + sLink +
               '" target="_blank" class="contact-button-link cb-ancor ' + bs.class + '" ' +
               (bs.title ? 'title="' + bs.title + '"' : '') +

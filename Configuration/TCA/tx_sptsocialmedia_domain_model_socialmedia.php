@@ -11,6 +11,9 @@ return [
         'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
 		'delete' => 'deleted',
+        'security' => [
+            'ignorePageTypeRestriction' => true,
+        ],
 		'enablecolumns' => [
             'disabled' => 'hidden',
             'starttime' => 'starttime',
@@ -27,21 +30,11 @@ return [
     ],
     'columns' => [
 		'sys_language_uid' => [
-			'exclude' => true,
-			'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
-			'config' => [
-				'type' => 'select',
-				'renderType' => 'selectSingle',
-				'special' => 'languages',
-				'items' => [
-					[
-						'LLL:EXT:lang/locallang_general.xlf:LGL.allLanguages',
-						-1,
-						'flags-multiple'
-					]
-				],
-				'default' => 0,
-			],
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
+            'config' => [
+                'type' => 'language',
+            ],
         ],
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -62,51 +55,51 @@ return [
                 'type' => 'passthrough',
             ],
         ],
-		't3ver_label' => [
-             'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.versionLabel',
-             'config' => [
-                 'type' => 'input',
-                 'size' => 30,
-                 'max' => 255,
-             ],
-         ],
+        't3ver_label' => [
+            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.versionLabel',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'max' => 255,
+            ],
+        ],
         'hidden' => [
-             'exclude' => true,
-             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.visible',
-             'config' => [
-                 'type' => 'check',
-                 'items' => [
-                     '1' => [
-                         '0' => 'LLL:EXT:lang/locallang_core.xlf:labels.enabled'
-                     ]
-                 ],
-             ],
-         ],
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.enabled',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        'label' => '',
+                        'invertStateDisplay' => true
+                    ]
+                ],
+            ]
+        ],
         'starttime' => [
-             'exclude' => true,
-             'l10n_mode' => 'mergeIfNotBlank',
-             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
-             'config' => [
-                 'type' => 'input',
-                 'size' => 13,
-                 'eval' => 'datetime',
-                 'default' => 0,
-             ]
-         ],
-         'endtime' => [
-             'exclude' => true,
-             'l10n_mode' => 'mergeIfNotBlank',
-             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
-             'config' => [
-                 'type' => 'input',
-                 'size' => 13,
-                 'eval' => 'datetime',
-                 'default' => 0,
-                 'range' => [
-                     'upper' => mktime(0, 0, 0, 1, 1, 2038)
-                 ]
-             ],
-         ],
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
+            'config' => [
+                'type' => 'datetime',
+                'default' => 0,
+            ],
+            'l10n_mode' => 'exclude',
+            'l10n_display' => 'defaultAsReadonly',
+        ],
+        'endtime' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
+            'config' => [
+                'type' => 'datetime',
+                'default' => 0,
+                'range' => [
+                    'upper' => mktime(0, 0, 0, 1, 1, 2038),
+                ],
+            ],
+            'l10n_mode' => 'exclude',
+            'l10n_display' => 'defaultAsReadonly',
+        ],
         'title' => [
 	        'exclude' => true,
 	        'label' => 'LLL:EXT:spt_socialmedia/Resources/Private/Language/locallang_db.xlf:tx_sptsocialmedia_domain_model_socialmedia.title',
@@ -147,22 +140,8 @@ return [
 	        'exclude' => true,
 	        'label' => 'LLL:EXT:spt_socialmedia/Resources/Private/Language/locallang_db.xlf:tx_sptsocialmedia_domain_model_socialmedia.link',
 	        'config' => [
-                'type' => 'input',
-                'size' => '30',
-                'max' => '256',
-                'eval' => 'trim',
-                'wizards' => [
-                    'link' => [
-                        'type' => 'popup',
-                        'title' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:header_link_formlabel',
-                        'icon' => 'EXT:backend/Resources/Public/Images/FormFieldWizard/wizard_link.gif',
-                        'module' => [
-                            'name' => 'wizard_link',
-                        ],
-                        'JSopenParams' => 'height=800,width=600,status=0,menubar=0,scrollbars=1',                        
-                    ],
-                ],
-                'softref' => 'typolink'
+                'type' => 'link',
+                'eval' => 'required'
             ],
 	    ],
     ],

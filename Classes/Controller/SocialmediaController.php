@@ -1,11 +1,14 @@
 <?php
 namespace SPT\SptSocialmedia\Controller;
 
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Extbase\Annotation\Inject;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\LinkHandling\LinkService;
+use SPT\SptSocialmedia\Domain\Repository\SocialmediaRepository;
 
 /***
  *
@@ -23,45 +26,55 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  */
 class SocialmediaController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
-  /**
-     * Inject the project repository
-     *
-     * @param \SPT\SptSocialmedia\Domain\Repository\SocialmediaRepository
-     */
-    public function injectEventCalenderRepository(\SPT\SptSocialmedia\Domain\Repository\SocialmediaRepository $socialmediaRepository)
+    /**
+    * socialmediaRepository
+    * 
+    * @var socialmediaRepository
+    */
+    protected $socialmediaRepository = null;
+   
+   /**
+    * @param SocialmediaRepository $socialmediaRepository
+    */
+    public function injectBookEditionRepository(SocialmediaRepository $socialmediaRepository)
     {
-       $this->socialmediaRepository = $socialmediaRepository;
+        $this->socialmediaRepository = $socialmediaRepository; 
     }
+
     /**
      * action list
      *
-     * @return void
+     * @return ResponseInterface
      */
-    public function listAction()
+    public function listAction(): ResponseInterface
     {
-        $this->pageRenderer = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Page\\PageRenderer');
+        $socialicons = null;
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+        $linkService = GeneralUtility::makeInstance(LinkService::class);
         $rootPageID = $GLOBALS['TSFE']->rootLine[0]['uid'];
         $socialmedias = $this->socialmediaRepository->findAll();
-         foreach ($socialmedias as $key => $value) {
-          $linkData = explode(' ', $value->getLink());
-            $target = $linkData[1];
+        foreach ($socialmedias as $key => $value) {
+            $linkData = explode(' ', $value->getLink());
+            $target = isset($linkData[1]) ? $linkData[1] : '_self';
             if( $value->getType() != 'phone'  && $value->getType() != 'envelope-o' && $value->getType() != 'file-o' && $value->getType() != 'link' ) {
                 if (!preg_match("~^(?:f|ht)tps?://~i", $linkData[0])) {                
                     $linkData[0] = "http://" . $linkData[0];                
                 }
+            } elseif ($value->getType() == 'link') {
+                $linkInfo = $linkService->resolve($linkData[0]);
+                $linkData[0] = $this->uriBuilder->reset()->setTargetPageUid((int)$linkInfo['pageuid'])->build ();
+            } elseif ($value->getType() == 'file-o') {
+                $fileInfo = $linkService->resolve($linkData[0]);
+                $linkData[0] = '/fileadmin'.$fileInfo['file']->getIdentifier();
             }
-            if ( $value->getType() == 'link' || $value->getType() == 'file-o' ) {
-                $this->uriBuilder->reset()->buildFrontendUri();
-                if (MathUtility::canBeInterpretedAsInteger($linkData[0])) {
-                    $linkData[0] = $this->uriBuilder->setTargetPageUid((int)$linkData[0]);
-                }
-            }
-            if ( $linkData[1] ) {
+
+            if (isset($target)) {
                 $socialicons .= "'".$value->getType()."': { class: '".$value->getType()."', use: true, link: '".$linkData[0]."', extras: 'target=_blank', title: '".$value->getTitle()."'},";
             } else {
-                $socialicons .= "'".$value->getType()."': { class: '".$value->getType()."', use: true, link: '".$linkData[0]."', title: '".$value->getTitle()."'},";    
+                $socialicons .= "'".$value->getType()."': { class: '".$value->getType()."', use: true, link: '".$linkData[0]."', title: '".$value->getTitle()."'},";
             }            
         }
+
         $extPath = PathUtility::stripPathSitePrefix(ExtensionManagementUtility::extPath($this->request->getControllerExtensionKey()));
         $socialmediaAttributes = "
             $(document).ready(function(){
@@ -71,17 +84,12 @@ class SocialmediaController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
                 });
             });            
         ";
-        $socialCss = $extPath.'Resources/Public/Css/socialwidget.css';
-        $fontAwsomeCss = $extPath.'Resources/Public/Css/font-awesome/css/font-awesome.min.css';
-        $jqueryScript = $extPath . 'Resources/Public/Js/jquery.min.js';
-        $socialScript = $extPath . 'Resources/Public/Js/socialwidget.js';
-        $this->pageRenderer->addCssFile($socialCss);
-        $this->pageRenderer->addCssFile($fontAwsomeCss);
-        if($this->settings['includeJSLib'] == 1) {
-            $this->pageRenderer->addJsFooterFile($jqueryScript);
-        }
-        $this->pageRenderer->addJsFooterFile($socialScript);
-        $this->pageRenderer->addFooterData('<script type="text/javascript">'.$socialmediaAttributes.'</script>');
-        $this->view->assign('socialmedias', $socialmedias);
+        $pageRenderer->addFooterData('<script type="text/javascript">'.$socialmediaAttributes.'</script>');
+        $this->view->assignMultiple([
+            'socialmedias' => $socialmedias,
+            'settings' => $this->settings
+        ]);
+
+        return $this->htmlResponse();
     }
 }

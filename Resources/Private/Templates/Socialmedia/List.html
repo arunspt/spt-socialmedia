@@ -1,6 +1,8 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:layout name="Default" />
 <f:section name="main">
-    
+	<f:if condition="{settings.includeJSLib}">
+		<f:asset.script identifier="jQuery-lib" src="EXT:spt_socialmedia/Resources/Public/Js/jquery.min.js" priority="true" />
+	</f:if>
 </f:section>
 </html>

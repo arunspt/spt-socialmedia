@@ -1,7 +1,7 @@
 <?php
-if (!defined('TYPO3_MODE')) {
-  die ('Access denied.');
-}
+defined('TYPO3') or die();
+
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
   
 $tempColumns = [
     'spt_socialmedia' => [
@@ -32,6 +32,5 @@ $tempColumns = [
     ],  
 ];
   
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('pages', $tempColumns);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('pages', '--div--;LLL:EXT:spt_socialmedia/Resources/Private/Language/locallang_db.xlf:pages.extendsocialmedia, spt_socialmedia', '', '');
-?>
+ExtensionManagementUtility::addTCAcolumns('pages', $tempColumns);
+ExtensionManagementUtility::addToAllTCAtypes('pages', '--div--;LLL:EXT:spt_socialmedia/Resources/Private/Language/locallang_db.xlf:pages.extendsocialmedia, spt_socialmedia', '', '');
